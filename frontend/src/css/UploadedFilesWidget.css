@@ -1,0 +1,36 @@
+.uploaded-files-widget {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #ffffff;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 200px;
+}
+
+.uploaded-files-widget h4 {
+    margin: 0;
+    font-size: 14px;
+    color: #333;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+}
+
+.uploaded-files-widget ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.uploaded-files-widget li {
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.file-icon {
+    color: #d9534f;
+    margin-right: 8px;
+}
