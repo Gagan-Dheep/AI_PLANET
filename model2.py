@@ -79,14 +79,13 @@ def get_vector_store(text_chunks):
 
 # Initialize a conversational chain using HuggingFace LLM
 def get_conversation_chain(vector_store):
-    tokenizer = AutoTokenizer.from_pretrained("google/flan-t5-base")
-    model = AutoModelForSeq2SeqLM.from_pretrained("google/flan-t5-base")
+    tokenizer = AutoTokenizer.from_pretrained("google/flan-t5-large")
+    model = AutoModelForSeq2SeqLM.from_pretrained("google/flan-t5-large")
     pipe = pipeline(
         "text2text-generation",
         model=model,
         tokenizer=tokenizer,
         max_length=512,
-        temperature=0.5
     )
     llm = HuggingFacePipeline(pipeline=pipe)
 
