@@ -3,3 +3,5 @@ __pycache__
 .env
 package-lock.json
 myenv/demo_video.mp4
+myenv
+.gitattributes

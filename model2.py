@@ -11,9 +11,9 @@ from langchain.vectorstores import FAISS
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
 from typing import List, Dict, Any  
-from sqlalchemy import create_engine, Column, String, Text, DateTime, ForeignKey, Integer
+from sqlalchemy import create_engine, Column, DateTime, Integer
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, relationship, Session
+from sqlalchemy.orm import sessionmaker, Session
 import uuid
 import datetime
 import uvicorn
@@ -79,14 +79,13 @@ def get_vector_store(text_chunks):
 
 # Initialize a conversational chain using HuggingFace LLM
 def get_conversation_chain(vector_store):
-    tokenizer = AutoTokenizer.from_pretrained("google/flan-t5-base")
-    model = AutoModelForSeq2SeqLM.from_pretrained("google/flan-t5-base")
+    tokenizer = AutoTokenizer.from_pretrained("google/flan-t5-large")
+    model = AutoModelForSeq2SeqLM.from_pretrained("google/flan-t5-large")
     pipe = pipeline(
         "text2text-generation",
         model=model,
         tokenizer=tokenizer,
         max_length=512,
-        temperature=0.5
     )
     llm = HuggingFacePipeline(pipeline=pipe)
 
