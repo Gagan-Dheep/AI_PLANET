@@ -2,5 +2,4 @@ node_modules
 __pycache__
 .env
 package-lock.json
-myenv/demo_video.mp4
-myenv
+myenv/
