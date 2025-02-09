@@ -1,4 +1,5 @@
 # Chatbot Project
+Have two models one in main.py and another in model2.py(bit more effective), choose the one that is ideal.
 
 ## Project Setup
 
