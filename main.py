@@ -11,9 +11,11 @@ from langchain.vectorstores import FAISS
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
 from typing import List, Dict, Any  
-from sqlalchemy import create_engine, Column, DateTime, Integer
+from sqlalchemy import String, create_engine, Column, DateTime, Integer
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.dialects.sqlite import BLOB
 import uuid
 import datetime
 import uvicorn
@@ -23,15 +25,15 @@ import os
 load_dotenv()
 
 # Database configuration
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:admin@localhost/chatbot")
-engine = create_engine(DATABASE_URL)
+DATABASE_URL = "sqlite:///./test.db"
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
 # Database Models
 class ChatSession(Base):
     __tablename__ = "chat_sessions"
-    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
 # Create database tables
@@ -43,7 +45,7 @@ app = FastAPI()
 # Configure CORS settings
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://127.0.0.1:5173"], 
+    allow_origins=["http://127.0.0.1:5173", "http://localhost:3000"], 
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -61,7 +63,7 @@ class CustomEmbeddings(Embeddings):
         return self.model.encode([text])[0].tolist()
 
 # In-memory session storage
-sessions: Dict[str, Any] = {}
+sessions: Dict[bytes, Any] = {}
 
 # Dependency for database session
 def get_db():
@@ -158,7 +160,6 @@ async def upload_pdf(files: List[UploadFile] = File(...), db: Session = Depends(
 async def ask_question(session_id: str = Form(...), question: str = Form(...), db: Session = Depends(get_db)):
     if session_id not in sessions:
         raise HTTPException(status_code=400, detail="Invalid session ID.")
-
     conversation = sessions[session_id]
 
     response = conversation({'question': question})
