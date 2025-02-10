@@ -52,7 +52,7 @@ const ChatInput = ({
       return;
     }
     try {
-      const response = await fetch("http://localhost:8000/upload_pdf/", {
+      const response = await fetch("https://intellichatpdf.onrender.com/upload_pdf/", {
         method: "POST",
         body: formData,
       });

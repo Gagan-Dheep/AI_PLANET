@@ -77,7 +77,7 @@ const sendMessage = async () => {
     formData.append("session_id", sessionId);
     formData.append("question", userInput);
 
-    const response = await fetch("http://localhost:8000/ask/", {
+    const response = await fetch("https://intellichatpdf.onrender.com/ask/", {
       method: "POST",
       body: formData,
     });
