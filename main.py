@@ -20,6 +20,14 @@ import uuid
 import datetime
 import uvicorn
 import os
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.requests import Request
+
+class LoggingMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        print(f"Request Origin: {request.headers.get('origin')}")
+        response = await call_next(request)
+        return response
 
 # Load environment variables
 load_dotenv()
@@ -42,10 +50,13 @@ Base.metadata.create_all(bind=engine)
 # Initialize FastAPI app
 app = FastAPI()
 
+app.add_middleware(LoggingMiddleware)
+
 # Configure CORS settings
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://intellichatpdf.vercel.app", "http://127.0.0.1:5173", "http://localhost:3000"], 
+    # allow_origins=["https://intellichatpdf.vercel.app", "http://127.0.0.1:5173", "http://localhost:3000"], 
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -122,6 +133,10 @@ def get_pdf_text(pdf_files):
         for page in pdf_reader.pages:
             text += page.extract_text()
     return text
+
+@app.get("/")
+async def root():
+    return {"message": "Welcome to IntelliChat PDF API"}
 
 # API to upload PDFs and create a session
 @app.post("/upload_pdf/")
