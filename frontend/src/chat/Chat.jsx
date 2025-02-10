@@ -117,6 +117,8 @@ const handleKeyDown = (e) => {
 useEffect(() => {
   const checkTaskStatus = async () => {
     try {
+      console.log("Checking task status...");
+      
       const response = await fetch('https://intellichatpdf.onrender.com/');
       const data = await response.json();
       console.log(data);
