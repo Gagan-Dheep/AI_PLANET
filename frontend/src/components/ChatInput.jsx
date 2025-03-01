@@ -90,7 +90,7 @@ const ChatInput = ({
         placeholder={placeholder}
       />
       <button id="send-button" onClick={onClick}>
-        Send
+        Send it
       </button>
 
       <input
