@@ -96,4 +96,5 @@ Detailed API documentation is provided under the [API Endpoints](#api-endpoints)
 ## Demo
 
 A live demo or screencast is provided below.
-
+if needed pip install --upgrade "fastapi[all] @ git+https://github.com/tiangolo/fastapi.git@master"
+also run after making venv ad in cmd.
