@@ -1,6 +1,5 @@
 import React, { useRef, useState } from "react";
 import { FaPaperclip } from "react-icons/fa";
-import { FaFilePdf } from "react-icons/fa";
 import Spinner from "./Spinner"; 
 import "../css/ChatInput.css";
 
@@ -23,9 +22,8 @@ const ChatInput = ({
     if (!files.length) return;
     setIsUploading(true);
 
-    const formData = new FormData();
-    const newFiles = [];
     let hasDuplicate = false;
+    const newFiles = [];
 
     for (let i = 0; i < files.length; i++) {
       if (files[i].type !== "application/pdf") {
@@ -40,10 +38,10 @@ const ChatInput = ({
         hasDuplicate = true;
         continue;
       }
-      
+
       newFiles.push(files[i]);
-      formData.append("files", files[i]);
     }
+
     if (newFiles.length === 0) {
       setIsUploading(false);
       if (!hasDuplicate) {
@@ -51,31 +49,36 @@ const ChatInput = ({
       }
       return;
     }
+
     try {
-      const response = await fetch("https://intellichatpdf.onrender.com/upload_pdf/", {
-        method: "POST",
-        body: formData,
-      });
+      for (let file of newFiles) {
+        const formData = new FormData();
+        formData.append("file", file);  // Send one file per request
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || "Failed to upload PDFs");
+        const response = await fetch("https://intellichatpdf.onrender.com/upload_pdf/", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.detail || "Failed to upload PDF");
+        }
+
+        const data = await response.json();
+        console.log("Upload successful:", data);
+
+        if (data.session_id) {
+          setSessionId(data.session_id); 
+          setUploadedFiles((prevFiles) => [...prevFiles, file]);
+        } else {
+          displayChatbotMessage("No session ID returned from the server.");      
+        }
       }
-
-      const data = await response.json();
-      console.log("Upload successful:", data);
-
-      if (data.session_id) {
-        setSessionId(data.session_id); 
-        // const fileArray = Array.from(files); 
-        // setUploadedFiles((prevFiles) => [...prevFiles, ...fileArray]);
-        setUploadedFiles((prevFiles) => [...prevFiles, ...newFiles]);
-      } else {
-        displayChatbotMessage("No session ID returned from the server.");      }
     } catch (error) {
       console.error("Error uploading files:", error);
-      displayChatbotMessage(`Error uploading files: ${error.message}`);    }
-    finally {
+      displayChatbotMessage(`Error uploading files: ${error.message}`);
+    } finally {
       setIsUploading(false);
     }
   };
