@@ -5,7 +5,7 @@ import "./css/App.css";
 // The main App component
 const App = () => {
   return (
-    <>
+    <> 
       <main>
         <Chat />
       </main>
