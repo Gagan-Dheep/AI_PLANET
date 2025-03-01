@@ -55,7 +55,7 @@ const ChatInput = ({
         const formData = new FormData();
         formData.append("file", file);  // Send one file per request
 
-        const response = await fetch("https://your-railway-proxy-url.com/upload_pdf/", {
+        const response = await fetch("https://intellichatpdf.onrender.com/upload_pdf/", {
           method: "POST",
           body: formData,
         });
