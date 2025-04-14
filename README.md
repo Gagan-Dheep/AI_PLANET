@@ -1,3 +1,4 @@
+Note : Due to resource constraints on the free-tier hosting service, the backend is disabled in the live demo. Full chatbot functionality available on local setup.
 # Chatbot Project
 Have two models one in main.py and another in model2.py(bit more effective), choose the one that is ideal.
 
